@@ -1,0 +1,44 @@
+#==========================swagger 访问接口==================================
+#           http://${ip}:10131/swagger-ui/index.html                      #
+#==========================================================================
+server:
+  port: 8080
+spring:
+  application:
+    name: sage-javon-backend
+
+  profiles:
+    active: ${server.profile:dev}
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  datasource:
+    dynamic:
+      primary: ob
+      strict: false
+      druid:
+        initial-size: 20 # 配置初始化大小/最小/最大
+        min-idle: 20
+        max-active: 20
+        maxWait: 2000 # 获取连接等待超时时间
+        time-between-eviction-runs-millis: 60000 # 间隔多久进行一次检测，检测需要关闭的空闲连接
+        min-evictable-idle-time-millis: 300000 # 一个连接在池中最小生存的时间
+        validation-query: SELECT 1
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+
+      datasource:
+        ob:
+          url:
+          username:
+          password:
+          driver-class-name:
+
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
