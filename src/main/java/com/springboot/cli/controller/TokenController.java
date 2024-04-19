@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping("/token")
+//@RequestMapping("/token")
 public class TokenController {
 
     @GetMapping("/get/Info")

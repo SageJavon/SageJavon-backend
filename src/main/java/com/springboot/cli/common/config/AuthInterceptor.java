@@ -1,8 +1,10 @@
 package com.springboot.cli.common.config;
 
+import com.springboot.cli.common.AppProperties;
 import com.springboot.cli.common.jwt.AuthStorage;
 import com.springboot.cli.common.jwt.JwtUser;
 import com.springboot.cli.common.jwt.TokenProvider;
+import com.xhpolaris.idlgen.basic.UserMeta;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -15,20 +17,26 @@ import javax.servlet.http.HttpServletResponse;
  * 拦截器
  *
  */
-@Component
 @Slf4j
+@Component
 public class AuthInterceptor implements HandlerInterceptor {
+
+    private final AppProperties appProperties;
+
+    public AuthInterceptor(AppProperties appProperties) {
+        this.appProperties = appProperties;
+    }
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader(AuthStorage.TOKEN_KEY);
-        if (StringUtils.hasText(token) && token.startsWith("Berry ")) {
-            token = token.substring(6);
-        }
-        else token = null;
+//        if (StringUtils.hasText(token) && token.startsWith("Berry ")) {
+//            token = token.substring(6);
+//        }
+//        else token = null;
         if (StringUtils.hasLength(token)) {
-            UserMeta tokens = TokenProvider.decodeToken(token);
+            UserMeta tokens = TokenProvider.decodeToken(token, appProperties.getPublicKey());
             JwtUser jwtUser = new JwtUser().setUserId(tokens.getUserId()).setValid(true);
             // 是否认证通过
             if (StringUtils.hasLength(jwtUser.getUserId()) && jwtUser.isValid()) {

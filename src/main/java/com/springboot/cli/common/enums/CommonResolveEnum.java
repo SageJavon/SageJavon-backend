@@ -15,10 +15,6 @@ public enum CommonResolveEnum implements OpResolve {
 
     CHECK_ARGUMENT("请检查参数"),
 
-    REDIRECT_SSO("请跳转sso进行登录"),
-
-    GRANTING_PERMISSION("请申请权限"),
-
     ;
     final String message;
 

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.springboot.cli.JwtDomeApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.353 s - in com.springboot.cli.JwtDomeApplicationTests
