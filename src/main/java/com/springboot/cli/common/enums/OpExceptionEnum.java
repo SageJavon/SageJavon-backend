@@ -18,6 +18,8 @@ public enum OpExceptionEnum {
     ILLEGAL_ARGUMENT("ILLEGAL_ARGUMENT", "非法参数", CHECK_ARGUMENT),
 
     EXECUTE_FAIL("EXECUTE_FAIL", "语句执行失败", CONTACT_RD),
+
+    USER_ID_EMPTY("USER_ID_EMPTY", "用户ID为空", CHECK_ARGUMENT),
     ;
     final String code;
     final String message;

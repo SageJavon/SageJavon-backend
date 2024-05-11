@@ -1,6 +1,6 @@
 package com.springboot.cli.service;
 
-import com.springboot.cli.model.TestDO;
+import com.springboot.cli.model.DO.TestDO;
 
 public interface TestService {
 

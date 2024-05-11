@@ -4,7 +4,7 @@ import com.springboot.cli.common.base.BaseResponse;
 import com.springboot.cli.common.enums.OpExceptionEnum;
 import com.springboot.cli.common.exception.OpException;
 import com.springboot.cli.common.utils.JsonUtil;
-import com.springboot.cli.model.TestDO;
+import com.springboot.cli.model.DO.TestDO;
 import com.springboot.cli.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 
 @RestController
 @Slf4j

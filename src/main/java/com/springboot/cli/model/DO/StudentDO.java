@@ -1,13 +1,18 @@
-package com.springboot.cli.model;
+package com.springboot.cli.model.DO;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import lombok.Data;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
+import lombok.Data;
+
 @Data
-@TableName("test")
-public class TestDO {
+@Builder
+@TableName("student")
+public class StudentDO {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private String text;
+    private String nickname;
+    private String portrait;
+    private Integer gender;
 }
