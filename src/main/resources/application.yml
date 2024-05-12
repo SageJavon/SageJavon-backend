@@ -3,6 +3,7 @@
 #==========================================================================
 server:
   port: 8080
+
 spring:
   application:
     name: sage-javon-backend
@@ -46,3 +47,6 @@ springfox:
   documentation:
     swagger-ui:
       enabled: true
+
+app:
+  publicKey: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEPWpl36StEUn9y3hZgS3aW4SjJmc/8e2rqTjC5WcBaLD6KOcW1iyUpB3+C3stzP06fQbx6YbhEtZn08nLyJcBUw=="
