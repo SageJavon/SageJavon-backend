@@ -1,2 +1,17 @@
 server:
   port: 8081
+
+app:
+  publicKey: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEPWpl36StEUn9y3hZgS3aW4SjJmc/8e2rqTjC5WcBaLD6KOcW1iyUpB3+C3stzP06fQbx6YbhEtZn08nLyJcBUw=="
+
+spring:
+  datasource:
+    dynamic:
+      datasource:
+        ob:
+          url: jdbc:mysql://mysql.mysql:3306/sage_javon?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+          username: root
+          password: pYRGObpCdG
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+
