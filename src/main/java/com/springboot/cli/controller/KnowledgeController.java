@@ -56,16 +56,14 @@ public class KnowledgeController {
     }
 
     @GetMapping
-    public BaseResponse<List<KnowledgeVO>> getKnowledgeGraph(Long studentId) {
-        log.info("Get knowledge graph : userId={}", studentId);
-        List<KnowledgeVO> knowledgeGraph;
+    public BaseResponse<List<KnowledgeVO>> getKnowledgeGraph(String studentId) {
+        log.info("Get knowledge graph : studentId={}", studentId);
         try {
-            knowledgeGraph = knowledgeService.get(studentId);
+            return BaseResponse.buildSuccess(knowledgeService.get(studentId));
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);
         } catch (Exception e) {
             return BaseResponse.buildSysEx(e);
         }
-        return BaseResponse.buildSuccess(knowledgeGraph);
     }
 }

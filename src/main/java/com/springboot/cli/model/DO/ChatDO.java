@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ChatDO {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private Long studentId;
+    private String studentId;
     private String title;
     //历史聊天记录数量
     private Integer sort;

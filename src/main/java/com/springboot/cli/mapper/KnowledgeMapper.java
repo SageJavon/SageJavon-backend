@@ -15,5 +15,5 @@ public interface KnowledgeMapper extends BaseMapper<KnowledgeDO> {
             "select k.id, k.parent_id, m.level, m.query, k.name " +
             "from knowledge k left join stu_mas m " +
             "on m.knowledge_id=k.id")
-    List<KnowledgeVO> getKnowledgeGraphVO(Long studentId);
+    List<KnowledgeVO> getKnowledgeGraphVO(String studentId);
 }

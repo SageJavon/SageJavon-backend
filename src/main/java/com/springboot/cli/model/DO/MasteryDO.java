@@ -12,7 +12,7 @@ import lombok.Data;
 public class MasteryDO {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private Long studentId;
+    private String studentId;
     private Long knowledgeId;
     private Integer level;
     private Integer query;

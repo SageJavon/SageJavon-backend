@@ -8,5 +8,5 @@ import java.util.List;
 public interface KnowledgeService {
     void save(List<KnowledgeDO> modelList);
 
-    List<KnowledgeVO> get(Long studentId);
+    List<KnowledgeVO> get(String studentId);
 }

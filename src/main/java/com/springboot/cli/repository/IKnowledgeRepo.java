@@ -7,5 +7,5 @@ import com.springboot.cli.model.VO.KnowledgeVO;
 import java.util.List;
 
 public interface IKnowledgeRepo extends IService<KnowledgeDO> {
-    List<KnowledgeVO> getknowledgeGraphVO(Long studentId);
+    List<KnowledgeVO> getKnowledgeGraphVO(String studentId);
 }
