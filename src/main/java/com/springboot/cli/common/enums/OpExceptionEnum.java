@@ -20,6 +20,8 @@ public enum OpExceptionEnum {
     EXECUTE_FAIL("EXECUTE_FAIL", "语句执行失败", CONTACT_RD),
 
     USER_ID_EMPTY("USER_ID_EMPTY", "用户ID为空", CHECK_ARGUMENT),
+
+    CHAT_ID_EMPTY("CHAT_ID_EMPTY", "ChatID为空", CHECK_ARGUMENT),
     ;
     final String code;
     final String message;
