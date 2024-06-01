@@ -5,7 +5,7 @@ import com.springboot.cli.common.enums.OpExceptionEnum;
 import com.springboot.cli.common.exception.OpException;
 import com.springboot.cli.common.utils.JsonUtil;
 import com.springboot.cli.model.DO.KnowledgeDO;
-import com.springboot.cli.model.VO.KnowledgeVO;
+import com.springboot.cli.model.VO.KnowledgeGraphVO;
 import com.springboot.cli.service.KnowledgeService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class KnowledgeController {
     }
 
     @GetMapping
-    public BaseResponse<List<KnowledgeVO>> getKnowledgeGraph(String studentId) {
+    public BaseResponse<List<KnowledgeGraphVO>> getKnowledgeGraph(String studentId) {
         log.info("Get knowledge graph : studentId={}", studentId);
         try {
             return BaseResponse.buildSuccess(knowledgeService.get(studentId));

@@ -2,7 +2,7 @@ package com.springboot.cli.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.springboot.cli.model.DO.KnowledgeDO;
-import com.springboot.cli.model.VO.KnowledgeVO;
+import com.springboot.cli.model.VO.KnowledgeGraphVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -15,5 +15,5 @@ public interface KnowledgeMapper extends BaseMapper<KnowledgeDO> {
             "select k.id, k.parent_id, m.level, m.query, k.name " +
             "from knowledge k left join stu_mas m " +
             "on m.knowledge_id=k.id")
-    List<KnowledgeVO> getKnowledgeGraphVO(String studentId);
+    List<KnowledgeGraphVO> getKnowledgeGraphVO(String studentId);
 }

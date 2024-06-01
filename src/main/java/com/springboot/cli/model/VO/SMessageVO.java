@@ -6,13 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class KnowledgeVO {
-    private Long id;
-    private Long parentId;
-    private Integer level;
-    private Integer query;
-    private String name;
+public class SMessageVO {
+    private Integer role;
+    private String content;
 }
