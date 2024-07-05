@@ -11,4 +11,6 @@ public interface ExerciseService {
     ExerciseDO getExerciseDetail(Long id);
 
     FeedBackVO getFeedBack(Long id, String answer, Integer submitNum);
+
+    FeedBackVO getSelectFeedBack(Long id, String choice);
 }

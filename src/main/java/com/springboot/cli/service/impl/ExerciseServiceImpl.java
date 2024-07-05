@@ -27,7 +27,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public List<ExerciseDO> getExerciseList(int type) {
-        return exerciseRepository.getExerciseList(0);
+        return exerciseRepository.getExerciseList(type);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public FeedBackVO getFeedBack(Long id, String answer, Integer submitNum) {
-        if(answer != null) {
+        if (answer != null) {
             ExerciseRecordDO exerciseRecord = ExerciseRecordDO.builder()
                     .exerciseId(id)
                     .studentId(AuthStorage.getUser().getUserId())
@@ -49,14 +49,49 @@ public class ExerciseServiceImpl implements ExerciseService {
             exerciseRecordRepository.save(exerciseRecord);
         }
         String correctAnswer = null;
-        if(submitNum >= submitNumThreshold) {
+        if (submitNum >= submitNumThreshold) {
             ExerciseDO exercise = exerciseRepository.getById(id);
-            if(exercise == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
+            if (exercise == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
             correctAnswer = exercise.getCorrectAnswer();
         }
         return FeedBackVO.builder()
                 .correctAnswer(correctAnswer)
                 .score(100)
                 .build();
+    }
+
+    @Override
+    public FeedBackVO getSelectFeedBack(Long id, String choice) {
+        String correctAnswer = null;
+        ExerciseDO exercise = exerciseRepository.getById(id);
+        if (exercise == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
+        correctAnswer = exercise.getCorrectAnswer();
+        if (choice.equals(correctAnswer)) {
+            ExerciseRecordDO exerciseRecord = ExerciseRecordDO.builder()
+                    .exerciseId(id)
+                    .studentId(AuthStorage.getUser().getUserId())
+                    .answer(choice)
+                    .score(1.0)
+                    .type(0)
+                    .submitTime(LocalDateTime.now())
+                    .build();
+            exerciseRecordRepository.save(exerciseRecord);
+            return FeedBackVO.builder()
+                    .score(1)
+                    .build();
+        } else {
+            ExerciseRecordDO exerciseRecord = ExerciseRecordDO.builder()
+                    .exerciseId(id)
+                    .studentId(AuthStorage.getUser().getUserId())
+                    .answer(choice)
+                    .score(0.0)
+                    .type(0)
+                    .submitTime(LocalDateTime.now())
+                    .build();
+            exerciseRecordRepository.save(exerciseRecord);
+            return FeedBackVO.builder()
+                    .score(0)
+                    .build();
+        }
     }
 }
