@@ -62,10 +62,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public FeedBackVO getSelectFeedBack(Long id, String choice) {
-        String correctAnswer = null;
         ExerciseDO exercise = exerciseRepository.getById(id);
         if (exercise == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
-        correctAnswer = exercise.getCorrectAnswer();
+        String correctAnswer = exercise.getCorrectAnswer();
         if (choice.equals(correctAnswer)) {
             ExerciseRecordDO exerciseRecord = ExerciseRecordDO.builder()
                     .exerciseId(id)

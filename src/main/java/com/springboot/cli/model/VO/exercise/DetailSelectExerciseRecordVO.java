@@ -35,7 +35,7 @@ public class DetailSelectExerciseRecordVO {
         this.choiceB = exercise.getChoiceB();
         this.choiceC = exercise.getChoiceC();
         this.choiceD = exercise.getChoiceD();
-        this.score = (int) (exerciseRecord.getScore() * 100);
+        this.score = (int) (double) exerciseRecord.getScore();
         this.correctAnswer = exercise.getCorrectAnswer();
         this.answer = exerciseRecord.getAnswer();
         this.submitTime = exerciseRecord.getSubmitTime();
