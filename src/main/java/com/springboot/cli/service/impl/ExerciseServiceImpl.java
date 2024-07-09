@@ -93,4 +93,9 @@ public class ExerciseServiceImpl implements ExerciseService {
                     .build();
         }
     }
+
+    @Override
+    public Integer getExerciseLNumber(int type) {
+        return exerciseRepository.getExerciseNumber(type);
+    }
 }

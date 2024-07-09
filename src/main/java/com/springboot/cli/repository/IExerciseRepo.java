@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface IExerciseRepo extends IService<ExerciseDO> {
     List<ExerciseDO> getExerciseList(int type);
+
+    Integer getExerciseNumber(int type);
 }

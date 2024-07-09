@@ -7,8 +7,8 @@ import com.springboot.cli.service.ExerciseRecordService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExerciseRecordServiceImpl implements ExerciseRecordService {
@@ -35,5 +35,24 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
     @Override
     public ExerciseRecordDO getExerciseRecord(Long recordId) {
         return exerciseRecordRepository.getById(recordId);
+    }
+
+    @Override
+    public List<ExerciseRecordDO> getStudentAllExerciseRecord(String studentId) {
+        LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId);
+        return exerciseRecordRepository.list(queryWrapper);
+    }
+
+    @Override
+    public int getExerciseRecordsByExerciseID(Long exerciseID) {
+        LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ExerciseRecordDO::getExerciseId, exerciseID);
+        List<ExerciseRecordDO> records = exerciseRecordRepository.list(queryWrapper);
+        List<String> distinctStudentIds = records.stream()
+                .map(ExerciseRecordDO::getStudentId)
+                .distinct()
+                .collect(Collectors.toList());
+        return distinctStudentIds.size();
     }
 }

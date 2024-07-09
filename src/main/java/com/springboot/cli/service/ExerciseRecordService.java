@@ -10,4 +10,8 @@ public interface ExerciseRecordService {
     List<ExerciseRecordDO> getExerciseRecord(String studentId, Long questionId);
 
     ExerciseRecordDO getExerciseRecord(Long recordId);
+
+    List<ExerciseRecordDO> getStudentAllExerciseRecord(String studentId);
+
+    int getExerciseRecordsByExerciseID(Long exerciseID);
 }
