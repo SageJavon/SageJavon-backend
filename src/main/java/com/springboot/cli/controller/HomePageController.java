@@ -44,7 +44,7 @@ public class HomePageController {
         List<Long> top10ExerciseIds = getTop10PopularExerciseIds(allExerciseRecord);
         List<CodeExerciseVO> codeExerciseVOList = new ArrayList<>();
         for (Long id : top10ExerciseIds) {
-            ExerciseDO exercise = exerciseService.getExerciseDetail(id);
+            ExerciseDO exercise = exerciseService.getExerciseById(id);
             List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
             Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
             CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);

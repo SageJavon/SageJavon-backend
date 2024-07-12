@@ -54,18 +54,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
     @Override
     public List<KnowledgeVO> getKnowledgeList(Long exerciseId) {
-        LambdaQueryWrapper<ExerciseKnowledgeDO> exerciseKnowledgeDOLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        exerciseKnowledgeDOLambdaQueryWrapper.eq(ExerciseKnowledgeDO::getExerciseId, exerciseId);
-        List<ExerciseKnowledgeDO> exerciseKnowledgeDOList = exerciseKnowledgeRepository.list(exerciseKnowledgeDOLambdaQueryWrapper);
-        if(exerciseKnowledgeDOList == null || exerciseKnowledgeDOList.isEmpty())
-            return null;
-        List<Long> knowledgeIdList = new ArrayList<>();
-        exerciseKnowledgeDOList.forEach(exerciseKnowledgeDO -> knowledgeIdList.add(exerciseKnowledgeDO.getKnowledgeId()));
-        LambdaQueryWrapper<KnowledgeDO> knowledgeDOLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        knowledgeDOLambdaQueryWrapper.in(KnowledgeDO::getId, knowledgeIdList);
-        List<KnowledgeDO> knowledgeList = knowledgeRepository.list(knowledgeDOLambdaQueryWrapper);
-        List<KnowledgeVO> resultList = new ArrayList<>();
-        knowledgeList.forEach(knowledge -> resultList.add(new KnowledgeVO(knowledge)));
-        return resultList;
+        return knowledgeRepository.getKnowledgeList(exerciseId);
+    }
+
+    @Override
+    public List<KnowledgeDO> getKnowledgeList() {
+        return knowledgeRepository.list();
     }
 }

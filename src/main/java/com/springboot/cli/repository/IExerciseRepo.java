@@ -7,7 +7,7 @@ import com.springboot.cli.model.DO.ExerciseDO;
 import java.util.List;
 
 public interface IExerciseRepo extends IService<ExerciseDO> {
-    List<ExerciseDO> getExerciseList(int type);
-
     Integer getExerciseNumber(int type);
+
+    List<ExerciseDO> getRecList(Integer questionNum);
 }

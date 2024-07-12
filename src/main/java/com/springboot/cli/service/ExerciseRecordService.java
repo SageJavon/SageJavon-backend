@@ -1,6 +1,7 @@
 package com.springboot.cli.service;
 
 import com.springboot.cli.model.DO.ExerciseRecordDO;
+import com.springboot.cli.model.VO.exercise.ExerciseRecordPage;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ExerciseRecordService {
     List<ExerciseRecordDO> getStudentAllExerciseRecord(String studentId);
 
     int getExerciseRecordsByExerciseID(Long exerciseID);
+
+    ExerciseRecordPage page(Integer pageSize, Integer pageNum);
 }

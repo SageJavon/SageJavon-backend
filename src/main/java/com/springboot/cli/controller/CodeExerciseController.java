@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.springboot.cli.common.CommonConstants.submitNumThreshold;
 import static com.springboot.cli.common.enums.OpExceptionEnum.ILLEGAL_ARGUMENT;
 
 @RestController
@@ -36,24 +34,9 @@ public class CodeExerciseController {
     @Resource
     private ExerciseRecordService exerciseRecordService;
 
-    @GetMapping("/list")
-    public BaseResponse<List<CodeExerciseVO>> getExerciseList() {
-        List<ExerciseDO> exerciseList = exerciseService.getExerciseList(0);
-        if(exerciseList == null || exerciseList.isEmpty())
-            return BaseResponse.buildSuccess(null);
-        List<CodeExerciseVO> codeExerciseList = new ArrayList<>();
-        for (ExerciseDO exercise : exerciseList) {
-            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exercise.getId());
-            Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), exercise.getId());
-            CodeExerciseVO codeExerciseVO = new CodeExerciseVO(exercise, knowledgeList, done);
-            codeExerciseList.add(codeExerciseVO);
-        }
-        return BaseResponse.buildSuccess(codeExerciseList);
-    }
-
     @GetMapping("/detail")
     public BaseResponse<CodeExerciseVO> getExerciseDetail(Long id) {
-        ExerciseDO exercise = exerciseService.getExerciseDetail(id);
+        ExerciseDO exercise = exerciseService.getExerciseById(id);
         if(exercise == null)
             return BaseResponse.buildSuccess(null);
         List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
@@ -76,7 +59,7 @@ public class CodeExerciseController {
     @GetMapping("/record/list")
     public BaseResponse<List<CodeExerciseRecordVO>> getExerciseRecordList(Long questionId) {
         if(questionId == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseDO exercise = exerciseService.getExerciseDetail(questionId);
+        ExerciseDO exercise = exerciseService.getExerciseById(questionId);
         if(exercise == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
         List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(questionId);
         List<ExerciseRecordDO> exerciseRecordList = exerciseRecordService.getExerciseRecord(AuthStorage.getUser().getUserId(), questionId);
@@ -90,7 +73,7 @@ public class CodeExerciseController {
         if(recordId == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
         ExerciseRecordDO exerciseRecord = exerciseRecordService.getExerciseRecord(recordId);
         if(exerciseRecord == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseDO exercise = exerciseService.getExerciseDetail(exerciseRecord.getExerciseId());
+        ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
         List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
         return BaseResponse.buildSuccess(new DetailCodeExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
     }

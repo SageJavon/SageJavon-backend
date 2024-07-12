@@ -1,0 +1,95 @@
+package com.springboot.cli.controller;
+
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.springboot.cli.common.base.BaseResponse;
+import com.springboot.cli.common.enums.OpExceptionEnum;
+import com.springboot.cli.common.jwt.AuthStorage;
+import com.springboot.cli.model.DO.ExerciseDO;
+import com.springboot.cli.model.DO.ExerciseRecordDO;
+import com.springboot.cli.model.DO.KnowledgeDO;
+import com.springboot.cli.model.VO.exercise.*;
+import com.springboot.cli.service.ExerciseRecordService;
+import com.springboot.cli.service.ExerciseService;
+import com.springboot.cli.service.KnowledgeService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@Slf4j
+@RequestMapping("/question")
+public class ExerciseController {
+    @Resource
+    private ExerciseService exerciseService;
+
+    @Resource
+    private KnowledgeService knowledgeService;
+
+    @Resource
+    private ExerciseRecordService exerciseRecordService;
+
+    @GetMapping("/recommend")
+    public BaseResponse<List<ExerciseVO>> getRecList(Integer questionNum) {
+        if(questionNum == null) return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
+        List<ExerciseDO> exerciseList = exerciseService.getRecList(questionNum);
+        if(exerciseList == null || exerciseList.isEmpty())
+            return BaseResponse.buildSuccess(null);
+        List<ExerciseVO> resultList = new ArrayList<>();
+        for (ExerciseDO exercise : exerciseList) {
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exercise.getId());
+            Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), exercise.getId());
+            ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
+            resultList.add(exerciseVO);
+        }
+        return BaseResponse.buildSuccess(resultList);
+    }
+
+    @GetMapping("/record/list")
+    public BaseResponse<ExerciseRecordVOPage> getRecordList(@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer pageNum) {
+        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
+            return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
+        ExerciseRecordPage exerciseRecordPage = exerciseRecordService.page(pageSize, pageNum);
+        List<ExerciseRecordDO> exerciseRecordList = exerciseRecordPage.getExerciseRecordList();
+        if(exerciseRecordList == null || exerciseRecordList.isEmpty())
+            return BaseResponse.buildSuccess(null);
+        List<ExerciseRecordVO> resultList = new ArrayList<>();
+        for (ExerciseRecordDO exerciseRecord : exerciseRecordList) {
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
+            ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
+            resultList.add(new ExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
+        }
+        return BaseResponse.buildSuccess(new ExerciseRecordVOPage(resultList, exerciseRecordPage.getTotal(), exerciseRecordPage.getPages()));
+    }
+
+    @GetMapping("/list")
+    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, List<Long> knowledgeId) {
+        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
+            return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
+        ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeId);
+        List<ExerciseDO> exerciseList = exercisePage.getExerciseList();
+        if(exerciseList == null || exerciseList.isEmpty())
+            return BaseResponse.buildSuccess(null);
+        List<ExerciseVO> resultList = new ArrayList<>();
+        for (ExerciseDO exercise : exerciseList) {
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exercise.getId());
+            Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), exercise.getId());
+            ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
+            resultList.add(exerciseVO);
+        }
+        return BaseResponse.buildSuccess(new ExerciseVOPage(resultList, exercisePage.getTotal(), exercisePage.getPages()));
+    }
+
+    @GetMapping("/knowledge")
+    public BaseResponse<List<KnowledgeVO>> getKnowledge() {
+        List<KnowledgeDO> knowledgeList = knowledgeService.getKnowledgeList();
+        List<KnowledgeVO> resultList = new ArrayList<>();
+        knowledgeList.forEach(knowledge -> resultList.add(new KnowledgeVO(knowledge)));
+        return BaseResponse.buildSuccess(resultList);
+    }
+}

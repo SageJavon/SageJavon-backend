@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface IKnowledgeRepo extends IService<KnowledgeDO> {
     List<KnowledgeGraphVO> getKnowledgeGraphVO(String studentId);
+
+    List<KnowledgeVO> getKnowledgeList(Long exerciseId);
 }

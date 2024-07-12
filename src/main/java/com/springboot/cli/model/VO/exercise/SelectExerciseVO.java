@@ -20,6 +20,7 @@ public class SelectExerciseVO {
     private String choiceB;
     private String choiceC;
     private String choiceD;
+    private Integer difficulty;
 
     public SelectExerciseVO(ExerciseDO selectExercise, List<KnowledgeVO> knowledgeList) {
         this.id = selectExercise.getId();
@@ -29,5 +30,6 @@ public class SelectExerciseVO {
         this.choiceB = selectExercise.getChoiceB();
         this.choiceC = selectExercise.getChoiceC();
         this.choiceD = selectExercise.getChoiceD();
+        this.difficulty = selectExercise.getDifficulty();
     }
 }

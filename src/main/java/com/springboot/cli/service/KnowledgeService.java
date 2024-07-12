@@ -13,4 +13,6 @@ public interface KnowledgeService {
     List<KnowledgeGraphVO> get(String studentId);
 
     List<KnowledgeVO> getKnowledgeList(Long exerciseId);
+
+    List<KnowledgeDO> getKnowledgeList();
 }

@@ -1,12 +1,16 @@
 package com.springboot.cli.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.cli.model.DO.ExerciseRecordDO;
+import com.springboot.cli.model.VO.exercise.ExerciseRecordPage;
 import com.springboot.cli.repository.impl.ExerciseRecordRepository;
 import com.springboot.cli.service.ExerciseRecordService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,5 +58,13 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
                 .distinct()
                 .collect(Collectors.toList());
         return distinctStudentIds.size();
+    }
+
+    @Override
+    public ExerciseRecordPage page(Integer pageSize, Integer pageNum) {
+        Page<ExerciseRecordDO> page = new Page<>(pageNum, pageSize);
+        page.addOrder(new OrderItem("submit_time", false));
+        page = exerciseRecordRepository.page(page);
+        return new ExerciseRecordPage(page.getRecords(), page.getTotal(), page.getPages());
     }
 }

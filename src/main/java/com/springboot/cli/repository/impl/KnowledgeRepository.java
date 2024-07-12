@@ -23,4 +23,9 @@ public class KnowledgeRepository extends ServiceImpl<KnowledgeMapper, KnowledgeD
     public List<KnowledgeGraphVO> getKnowledgeGraphVO(String studentId) {
         return knowledgeMapper.getKnowledgeGraphVO(studentId);
     }
+
+    @Override
+    public List<KnowledgeVO> getKnowledgeList(Long exerciseId) {
+        return knowledgeMapper.getKnowledgeList(exerciseId);
+    }
 }

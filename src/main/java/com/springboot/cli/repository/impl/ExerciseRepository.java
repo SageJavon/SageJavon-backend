@@ -15,13 +15,13 @@ public class ExerciseRepository extends ServiceImpl<ExerciseMapper, ExerciseDO> 
     ExerciseMapper exerciseMapper;
 
     @Override
-    public List<ExerciseDO> getExerciseList(int type) {
-        return exerciseMapper.getExerciseList(type);
+    public Integer getExerciseNumber(int type) {
+        return exerciseMapper.getExerciseNumber(type);
     }
 
     @Override
-    public Integer getExerciseNumber(int type) {
-        return exerciseMapper.getExerciseNumber(type);
+    public List<ExerciseDO> getRecList(Integer questionNum) {
+        return exerciseMapper.getRecList(questionNum);
     }
 
 
