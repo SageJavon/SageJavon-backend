@@ -1,6 +1,5 @@
 package com.springboot.cli.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.springboot.cli.common.base.BaseResponse;
 import com.springboot.cli.common.enums.OpExceptionEnum;
 import com.springboot.cli.common.jwt.AuthStorage;
@@ -12,14 +11,13 @@ import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
 import com.springboot.cli.service.KnowledgeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -68,10 +66,13 @@ public class ExerciseController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, List<Long> knowledgeId) {
+    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId) {
+        List<Long> knowledgeIdList = null;
+        if (knowledgeId != null && !knowledgeId.isEmpty())
+            knowledgeIdList = Arrays.stream(knowledgeId.split(",")).map(Long::parseLong).collect(Collectors.toList());
         if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
             return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
-        ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeId);
+        ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeIdList);
         List<ExerciseDO> exerciseList = exercisePage.getExerciseList();
         if(exerciseList == null || exerciseList.isEmpty())
             return BaseResponse.buildSuccess(null);
