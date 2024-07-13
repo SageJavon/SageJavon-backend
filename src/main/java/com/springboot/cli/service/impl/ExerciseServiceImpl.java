@@ -114,6 +114,10 @@ public class ExerciseServiceImpl implements ExerciseService {
         Page<ExerciseDO> page = new Page<>(pageNum, pageSize);
         page.addOrder(new OrderItem("id", true));
         LambdaQueryWrapper<ExerciseDO> queryWrapper = new LambdaQueryWrapper<>();
+        // 筛选题目类型
+        if (type != null) {
+            queryWrapper.eq(ExerciseDO::getType, type);
+        }
         if (difficulty != null)
             queryWrapper.eq(ExerciseDO::getDifficulty, difficulty);
         if (knowledgeId != null && !knowledgeId.isEmpty()) {
