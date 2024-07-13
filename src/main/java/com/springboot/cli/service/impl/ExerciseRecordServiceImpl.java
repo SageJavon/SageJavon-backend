@@ -24,9 +24,18 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
         LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId);
         queryWrapper.eq(ExerciseRecordDO::getExerciseId, exerciseId);
-        ExerciseRecordDO exerciseRecord = exerciseRecordRepository.getOne(queryWrapper);
+
+        ExerciseRecordDO exerciseRecord = null;
+        try {
+            exerciseRecord = exerciseRecordRepository.getOne(queryWrapper);
+        } catch (Exception e) {
+            return 0; // Return 0 if there's an issue with repository or query execution
+        }
+
         return exerciseRecord == null ? 0 : 1;
     }
+
+
 
     @Override
     public List<ExerciseRecordDO> getExerciseRecord(String studentId, Long questionId) {
