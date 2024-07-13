@@ -25,15 +25,19 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
         queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId);
         queryWrapper.eq(ExerciseRecordDO::getExerciseId, exerciseId);
 
-        ExerciseRecordDO exerciseRecord = null;
         try {
-            exerciseRecord = exerciseRecordRepository.getOne(queryWrapper);
+            ExerciseRecordDO exerciseRecord = exerciseRecordRepository.getBaseMapper().selectOne(queryWrapper);
+            if (exerciseRecord != null) {
+                return 1; // Return 1 if exerciseRecord is found
+            } else {
+                return 0; // Return 0 if no exerciseRecord is found
+            }
         } catch (Exception e) {
+            // Log the exception or handle it based on your application's error handling strategy
             return 0; // Return 0 if there's an issue with repository or query execution
         }
-
-        return exerciseRecord == null ? 0 : 1;
     }
+
 
 
 
