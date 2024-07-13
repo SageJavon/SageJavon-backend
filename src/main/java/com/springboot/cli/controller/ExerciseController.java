@@ -66,56 +66,23 @@ public class ExerciseController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<ExerciseVOPage> getExerciseList(
-            @RequestParam(defaultValue = "1") Integer type,
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            Integer difficulty,
-            String knowledgeId) {
-
+    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId) {
         List<Long> knowledgeIdList = null;
-        if (knowledgeId != null && !knowledgeId.isEmpty()) {
-            knowledgeIdList = Arrays.stream(knowledgeId.split(","))
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
-        }
-
-        // Check for illegal arguments
-        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 1) {
+        if (knowledgeId != null && !knowledgeId.isEmpty())
+            knowledgeIdList = Arrays.stream(knowledgeId.split(",")).map(Long::parseLong).collect(Collectors.toList());
+        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
             return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
-        }
-
-        // Retrieve exercises from service
         ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeIdList);
-
-        // Check if exercisePage is null (this should not happen if service returns correctly)
-        if (exercisePage == null) {
-            return BaseResponse.buildSuccess(null);
-        }
-
-        // Retrieve exercise list from the page
         List<ExerciseDO> exerciseList = exercisePage.getExerciseList();
-
-        // Check if exerciseList is null or empty
-        if (exerciseList == null || exerciseList.isEmpty()) {
+        if(exerciseList == null || exerciseList.isEmpty())
             return BaseResponse.buildSuccess(null);
-        }
-
-        // Process each exercise to create ExerciseVO objects
         List<ExerciseVO> resultList = new ArrayList<>();
         for (ExerciseDO exercise : exerciseList) {
-            // Get knowledge list for the exercise
             List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exercise.getId());
-
-            // Check if user has already done this exercise
             Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), exercise.getId());
-
-            // Create ExerciseVO object and add to resultList
             ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
             resultList.add(exerciseVO);
         }
-
-        // Return the response with ExerciseVOPage
         return BaseResponse.buildSuccess(new ExerciseVOPage(resultList, exercisePage.getTotal(), exercisePage.getPages()));
     }
 
