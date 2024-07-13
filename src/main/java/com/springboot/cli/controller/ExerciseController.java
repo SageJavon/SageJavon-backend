@@ -66,7 +66,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "0") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId) {
+    public BaseResponse<ExerciseVOPage> getExerciseList(@RequestParam(defaultValue = "1") Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId) {
         List<Long> knowledgeIdList = null;
         if (knowledgeId != null && !knowledgeId.isEmpty())
             knowledgeIdList = Arrays.stream(knowledgeId.split(",")).map(Long::parseLong).collect(Collectors.toList());
