@@ -17,5 +17,5 @@ public interface ExerciseService {
 
     List<ExerciseDO> getRecList(Integer questionNum);
 
-    ExercisePage page(Integer type, Integer pageNum, Integer pageSize, Integer difficulty, List<Long> knowledgeId);
+    ExercisePage page(Integer type, Integer pageNum, Integer pageSize, Integer difficulty, List<Long> knowledgeId, Integer difficultyOrder);
 }

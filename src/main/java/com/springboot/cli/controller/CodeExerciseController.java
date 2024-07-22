@@ -10,10 +10,7 @@ import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
 import com.springboot.cli.service.KnowledgeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -46,8 +43,8 @@ public class CodeExerciseController {
     }
 
     @PostMapping
-    public BaseResponse<FeedBackVO> getFeedBack(Long id, String answer, Integer submitNum) {
-        if(id == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
+    public BaseResponse<FeedBackVO> getFeedBack(Long id, @RequestBody String answer, Integer submitNum) {
+        if(id == null || answer == null || answer.isEmpty() || submitNum == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
         try {
             FeedBackVO feedBack = exerciseService.getFeedBack(id, answer, submitNum);
             return BaseResponse.buildSuccess(feedBack);

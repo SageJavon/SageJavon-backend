@@ -24,6 +24,8 @@ public enum OpExceptionEnum {
     CHAT_ID_EMPTY("CHAT_ID_EMPTY", "ChatID为空", CHECK_ARGUMENT),
 
     CHAT_NOT_EXIST("CHAT_NOT_EXIST", "Chat不存在", CHECK_ARGUMENT),
+
+    LLM_ERROR("LLM_ERROR", "大模型错误", CONTACT_RD),
     ;
     final String code;
     final String message;

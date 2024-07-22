@@ -14,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,8 +31,8 @@ public class ExerciseController {
     private ExerciseRecordService exerciseRecordService;
 
     @GetMapping("/recommend")
-    public BaseResponse<List<ExerciseVO>> getRecList(Integer questionNum) {
-        if(questionNum == null) return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
+    public BaseResponse<List<ExerciseVO>> getRecList(Integer questionNum, Integer difficultyOrder) {
+        if(questionNum == null || difficultyOrder == null) return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
         List<ExerciseDO> exerciseList = exerciseService.getRecList(questionNum);
         if(exerciseList == null || exerciseList.isEmpty())
             return BaseResponse.buildSuccess(null);
@@ -45,6 +43,10 @@ public class ExerciseController {
             ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
             resultList.add(exerciseVO);
         }
+        if (difficultyOrder == 1)
+            resultList.sort(Comparator.comparingInt(ExerciseVO::getDifficulty));
+        if (difficultyOrder == 2)
+            resultList.sort((o1, o2) -> Integer.compare(o2.getDifficulty(), o1.getDifficulty()));
         return BaseResponse.buildSuccess(resultList);
     }
 
@@ -66,13 +68,13 @@ public class ExerciseController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId) {
+    public BaseResponse<ExerciseVOPage> getExerciseList(Integer type, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize, Integer difficulty, String knowledgeId, Integer difficultyOrder) {
         List<Long> knowledgeIdList = null;
         if (knowledgeId != null && !knowledgeId.isEmpty())
             knowledgeIdList = Arrays.stream(knowledgeId.split(",")).map(Long::parseLong).collect(Collectors.toList());
-        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
+        if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0 || difficultyOrder == null)
             return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
-        ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeIdList);
+        ExercisePage exercisePage = exerciseService.page(type, pageNum, pageSize, difficulty, knowledgeIdList, difficultyOrder);
         List<ExerciseDO> exerciseList = exercisePage.getExerciseList();
         if(exerciseList == null || exerciseList.isEmpty())
             return BaseResponse.buildSuccess(null);
