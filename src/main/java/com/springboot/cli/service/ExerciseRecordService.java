@@ -16,5 +16,5 @@ public interface ExerciseRecordService {
 
     int getExerciseRecordsByExerciseID(Long exerciseID);
 
-    ExerciseRecordPage page(Integer pageSize, Integer pageNum);
+    ExerciseRecordPage page(Integer pageSize, Integer pageNum, String studentId);
 }

@@ -60,10 +60,12 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
     }
 
     @Override
-    public ExerciseRecordPage page(Integer pageSize, Integer pageNum) {
+    public ExerciseRecordPage page(Integer pageSize, Integer pageNum, String studentId) {
         Page<ExerciseRecordDO> page = new Page<>(pageNum, pageSize);
         page.addOrder(new OrderItem("submit_time", false));
-        page = exerciseRecordRepository.page(page);
+        LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId);
+        page = exerciseRecordRepository.page(page, queryWrapper);
         return new ExerciseRecordPage(page.getRecords(), page.getTotal(), page.getPages());
     }
 }

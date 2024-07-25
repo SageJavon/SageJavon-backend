@@ -54,7 +54,7 @@ public class ExerciseController {
     public BaseResponse<ExerciseRecordVOPage> getRecordList(@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer pageNum) {
         if (pageSize == null || pageNum == null || pageNum < 1 || pageSize < 0)
             return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
-        ExerciseRecordPage exerciseRecordPage = exerciseRecordService.page(pageSize, pageNum);
+        ExerciseRecordPage exerciseRecordPage = exerciseRecordService.page(pageSize, pageNum, AuthStorage.getUser().getUserId());
         List<ExerciseRecordDO> exerciseRecordList = exerciseRecordPage.getExerciseRecordList();
         if(exerciseRecordList == null || exerciseRecordList.isEmpty())
             return BaseResponse.buildSuccess(null);
