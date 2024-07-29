@@ -3,6 +3,8 @@ package com.springboot.cli.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.springboot.cli.common.enums.OpExceptionEnum;
+import com.springboot.cli.common.exception.OpException;
 import com.springboot.cli.model.DO.ExerciseRecordDO;
 import com.springboot.cli.model.VO.exercise.ExerciseRecordPage;
 import com.springboot.cli.repository.impl.ExerciseRecordRepository;
@@ -21,9 +23,10 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
 
     @Override
     public Integer hasDoneExercise(String studentId, Long exerciseId) {
+        if(studentId == null || exerciseId == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
         LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId).eq(ExerciseRecordDO::getExerciseId, exerciseId);
-        ExerciseRecordDO exerciseRecord = exerciseRecordRepository.getOne(queryWrapper,false);
+        ExerciseRecordDO exerciseRecord = exerciseRecordRepository.getOne(queryWrapper);
         return exerciseRecord == null ? 0 : 1;
     }
 
