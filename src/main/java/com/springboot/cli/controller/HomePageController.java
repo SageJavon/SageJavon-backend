@@ -1,6 +1,7 @@
 package com.springboot.cli.controller;
 
 import com.springboot.cli.common.base.BaseResponse;
+import com.springboot.cli.common.exception.OpException;
 import com.springboot.cli.common.jwt.AuthStorage;
 import com.springboot.cli.model.DO.ExerciseDO;
 import com.springboot.cli.model.DO.ExerciseRecordDO;
@@ -34,28 +35,33 @@ public class HomePageController {
 
     @Resource
     private KnowledgeService knowledgeService;
+
     @GetMapping
     public BaseResponse<AllInformationVO> getAllInformation() {
-        Integer codeNumber = exerciseService.getExerciseLNumber(0);
-        Integer selectNumber = exerciseService.getExerciseLNumber(1);
-        List<ExerciseRecordDO> allExerciseRecord = exerciseRecordService.getStudentAllExerciseRecord(AuthStorage.getUser().getUserId());
-        LocalDateTime maxSubmitTime = getMaxSubmitTime(allExerciseRecord);
+        try {
+            Integer codeNumber = exerciseService.getExerciseLNumber(0);
+            Integer selectNumber = exerciseService.getExerciseLNumber(1);
+            List<ExerciseRecordDO> allExerciseRecord = exerciseRecordService.getStudentAllExerciseRecord(AuthStorage.getUser().getUserId());
+            LocalDateTime maxSubmitTime = getMaxSubmitTime(allExerciseRecord);
 
-        List<Long> top10ExerciseIds = getTop10PopularExerciseIds(allExerciseRecord);
-        List<CodeExerciseVO> codeExerciseVOList = new ArrayList<>();
-        for (Long id : top10ExerciseIds) {
-            ExerciseDO exercise = exerciseService.getExerciseById(id);
-            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
-            Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
-            CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
-            codeExerciseVOList.add(codeExercise);
+            List<Long> top10ExerciseIds = getTop10PopularExerciseIds(allExerciseRecord);
+            List<CodeExerciseVO> codeExerciseVOList = new ArrayList<>();
+            for (Long id : top10ExerciseIds) {
+                ExerciseDO exercise = exerciseService.getExerciseById(id);
+                List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
+                Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
+                CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
+                codeExerciseVOList.add(codeExercise);
+            }
+
+            Integer continuousSolveDays = getContinuousSolveDays(allExerciseRecord);
+            Integer solveCount = getSolveCount(allExerciseRecord);
+            Map<LocalDate, Integer> solvePerDay = getSolvePerDay(allExerciseRecord);
+
+            return BaseResponse.buildSuccess(new AllInformationVO(codeNumber,selectNumber,maxSubmitTime,codeExerciseVOList,continuousSolveDays,solveCount,solvePerDay));
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
         }
-
-        Integer continuousSolveDays = getContinuousSolveDays(allExerciseRecord);
-        Integer solveCount = getSolveCount(allExerciseRecord);
-        Map<LocalDate, Integer> solvePerDay = getSolvePerDay(allExerciseRecord);
-
-        return BaseResponse.buildSuccess(new AllInformationVO(codeNumber,selectNumber,maxSubmitTime,codeExerciseVOList,continuousSolveDays,solveCount,solvePerDay));
     }
 
     public static LocalDateTime getMaxSubmitTime(List<ExerciseRecordDO> allExercise) {

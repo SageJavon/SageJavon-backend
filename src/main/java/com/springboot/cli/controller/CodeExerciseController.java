@@ -33,13 +33,17 @@ public class CodeExerciseController {
 
     @GetMapping("/detail")
     public BaseResponse<CodeExerciseVO> getExerciseDetail(Long id) {
-        ExerciseDO exercise = exerciseService.getExerciseById(id);
-        if(exercise == null)
-            return BaseResponse.buildSuccess(null);
-        List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
-        Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
-        CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
-        return BaseResponse.buildSuccess(codeExercise);
+        try {
+            ExerciseDO exercise = exerciseService.getExerciseById(id);
+            if(exercise == null)
+                return BaseResponse.buildSuccess(null);
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
+            Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
+            CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
+            return BaseResponse.buildSuccess(codeExercise);
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
     }
 
     @PostMapping
@@ -56,22 +60,30 @@ public class CodeExerciseController {
     @GetMapping("/record/list")
     public BaseResponse<List<CodeExerciseRecordVO>> getExerciseRecordList(Long questionId) {
         if(questionId == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseDO exercise = exerciseService.getExerciseById(questionId);
-        if(exercise == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(questionId);
-        List<ExerciseRecordDO> exerciseRecordList = exerciseRecordService.getExerciseRecord(AuthStorage.getUser().getUserId(), questionId);
-        List<CodeExerciseRecordVO> resultList = new ArrayList<>();
-        exerciseRecordList.forEach(record -> resultList.add(new CodeExerciseRecordVO(exercise, knowledgeList, record)));
-        return BaseResponse.buildSuccess(resultList);
+        try {
+            ExerciseDO exercise = exerciseService.getExerciseById(questionId);
+            if(exercise == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(questionId);
+            List<ExerciseRecordDO> exerciseRecordList = exerciseRecordService.getExerciseRecord(AuthStorage.getUser().getUserId(), questionId);
+            List<CodeExerciseRecordVO> resultList = new ArrayList<>();
+            exerciseRecordList.forEach(record -> resultList.add(new CodeExerciseRecordVO(exercise, knowledgeList, record)));
+            return BaseResponse.buildSuccess(resultList);
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
     }
 
     @GetMapping("/record/detail")
     public BaseResponse<DetailCodeExerciseRecordVO> getDetailExerciseRecord(Long recordId) {
         if(recordId == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseRecordDO exerciseRecord = exerciseRecordService.getExerciseRecord(recordId);
-        if(exerciseRecord == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
-        List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
-        return BaseResponse.buildSuccess(new DetailCodeExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
+        try {
+            ExerciseRecordDO exerciseRecord = exerciseRecordService.getExerciseRecord(recordId);
+            if(exerciseRecord == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
+            ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
+            return BaseResponse.buildSuccess(new DetailCodeExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
     }
 }

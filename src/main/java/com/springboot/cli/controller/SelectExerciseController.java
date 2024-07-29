@@ -34,12 +34,17 @@ public class SelectExerciseController {
 
     @GetMapping("/detail")
     public BaseResponse<SelectExerciseVO> getExerciseDetail(Long id) {
-        ExerciseDO exercise = exerciseService.getExerciseById(id);
-        if(exercise == null)
-            return BaseResponse.buildSuccess(null);
-        List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
-        SelectExerciseVO selectExercise = new SelectExerciseVO(exercise, knowledgeList);
-        return BaseResponse.buildSuccess(selectExercise);
+        if(id == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
+        try {
+            ExerciseDO exercise = exerciseService.getExerciseById(id);
+            if(exercise == null)
+                return BaseResponse.buildSuccess(null);
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
+            SelectExerciseVO selectExercise = new SelectExerciseVO(exercise, knowledgeList);
+            return BaseResponse.buildSuccess(selectExercise);
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
     }
 
     @PostMapping
@@ -56,10 +61,14 @@ public class SelectExerciseController {
     @GetMapping("/record/detail")
     public BaseResponse<DetailSelectExerciseRecordVO> getDetailExerciseRecord(Long recordId) {
         if(recordId == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseRecordDO exerciseRecord = exerciseRecordService.getExerciseRecord(recordId);
-        if(exerciseRecord == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
-        ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
-        List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
-        return BaseResponse.buildSuccess(new DetailSelectExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
+        try {
+            ExerciseRecordDO exerciseRecord = exerciseRecordService.getExerciseRecord(recordId);
+            if(exerciseRecord == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
+            ExerciseDO exercise = exerciseService.getExerciseById(exerciseRecord.getExerciseId());
+            List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exerciseRecord.getExerciseId());
+            return BaseResponse.buildSuccess(new DetailSelectExerciseRecordVO(exercise, knowledgeList, exerciseRecord));
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
     }
 }
