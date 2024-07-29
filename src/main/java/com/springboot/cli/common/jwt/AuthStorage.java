@@ -1,18 +1,15 @@
 package com.springboot.cli.common.jwt;
 
-import com.springboot.cli.common.base.BaseResponse;
 import com.springboot.cli.common.enums.OpExceptionEnum;
 import com.springboot.cli.common.exception.OpException;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import com.springboot.cli.common.jwt.JwtUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Objects;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 
 /**
