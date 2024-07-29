@@ -39,6 +39,7 @@ public class ExerciseController {
         List<ExerciseVO> resultList = new ArrayList<>();
         for (ExerciseDO exercise : exerciseList) {
             List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(exercise.getId());
+            if (AuthStorage.getUser() == null) return BaseResponse.buildBizEx(OpExceptionEnum.JWT_ERROR);
             Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), exercise.getId());
             ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
             resultList.add(exerciseVO);

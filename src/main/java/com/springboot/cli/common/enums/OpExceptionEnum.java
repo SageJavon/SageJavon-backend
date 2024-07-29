@@ -26,7 +26,9 @@ public enum OpExceptionEnum {
     CHAT_NOT_EXIST("CHAT_NOT_EXIST", "Chat不存在", CHECK_ARGUMENT),
 
     LLM_ERROR("LLM_ERROR", "大模型错误", CONTACT_RD),
-    ;
+
+    JWT_ERROR("JWT_ERROR", "JWT解析错误", CONTACT_RD);
+
     final String code;
     final String message;
     final OpResolve resolve;
