@@ -26,8 +26,8 @@ public class ExerciseRecordServiceImpl implements ExerciseRecordService {
         if(studentId == null || exerciseId == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
         LambdaQueryWrapper<ExerciseRecordDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ExerciseRecordDO::getStudentId, studentId).eq(ExerciseRecordDO::getExerciseId, exerciseId);
-        ExerciseRecordDO exerciseRecord = exerciseRecordRepository.getOne(queryWrapper);
-        return exerciseRecord == null ? 0 : 1;
+        List<ExerciseRecordDO> exerciseRecordList = exerciseRecordRepository.list(queryWrapper);
+        return (exerciseRecordList == null || exerciseRecordList.isEmpty()) ? 0 : 1;
     }
 
     @Override
