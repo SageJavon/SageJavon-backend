@@ -62,7 +62,12 @@ public class ExerciseServiceImpl implements ExerciseService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestBody, requestHeaders);
-        String result = restTemplate.postForObject(url, httpEntity, String.class);
+        String result = null;
+        try{
+            result = restTemplate.postForObject(url, httpEntity, String.class);
+        } catch (Exception e) {
+            throw new OpException(OpExceptionEnum.LLM_ERROR);
+        }
         if (result == null) throw new OpException(OpExceptionEnum.LLM_ERROR);
         JSONObject json = JSONObject.parseObject(result);
         String data = json.getString("data");
