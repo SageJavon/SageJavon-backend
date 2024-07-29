@@ -4,6 +4,7 @@ import com.springboot.cli.common.base.BaseResponse;
 import com.springboot.cli.common.enums.OpExceptionEnum;
 import com.springboot.cli.common.exception.OpException;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -11,10 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 
 /**
  * 存储本次请求的授权信息，适用于各种业务场景，包括分布式部署
  */
+@Slf4j
 public class AuthStorage {
 
     @ApiModelProperty("请求头token的下标")
@@ -32,6 +36,7 @@ public class AuthStorage {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         JwtUser jwtUser = JWT_USER.get(request.getHeader(TOKEN_KEY));
         if (jwtUser == null) throw new OpException(OpExceptionEnum.JWT_ERROR);
+        log.info("Get student ID: {}", jwtUser.getUserId());
         return jwtUser;
     }
 
