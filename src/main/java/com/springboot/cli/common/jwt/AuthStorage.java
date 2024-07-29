@@ -30,8 +30,9 @@ public class AuthStorage {
      */
     public static JwtUser getUser() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        if (AuthStorage.getUser() == null) throw new OpException(OpExceptionEnum.JWT_ERROR);
-        return JWT_USER.get(request.getHeader(TOKEN_KEY));
+        JwtUser jwtUser = JWT_USER.get(request.getHeader(TOKEN_KEY));
+        if (jwtUser == null) throw new OpException(OpExceptionEnum.JWT_ERROR);
+        return jwtUser;
     }
 
     /**
