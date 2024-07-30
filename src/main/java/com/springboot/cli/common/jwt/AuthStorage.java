@@ -23,14 +23,14 @@ public class AuthStorage {
     /**
      * 模拟session
      */
-    private static final HashMap<String, JwtUser> JWT_USER = new HashMap<String, JwtUser>();
+    private static final ThreadLocal<JwtUser> JWT_USER = new ThreadLocal<>();
 
     /**
      * 全局获取用户
      */
     public static JwtUser getUser() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        JwtUser jwtUser = JWT_USER.get(request.getHeader(TOKEN_KEY));
+        JwtUser jwtUser = JWT_USER.get();
         if (jwtUser == null) throw new OpException(OpExceptionEnum.JWT_ERROR);
         return jwtUser;
     }
@@ -39,7 +39,7 @@ public class AuthStorage {
      * 设置用户
      */
     public static void setUser(String token, JwtUser user) {
-        JWT_USER.put(token, user);
+        JWT_USER.set(user);
     }
 
     /**
@@ -47,6 +47,6 @@ public class AuthStorage {
      */
     public static void clearUser() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        JWT_USER.remove(request.getHeader(TOKEN_KEY));
+        JWT_USER.remove();
     }
 }
