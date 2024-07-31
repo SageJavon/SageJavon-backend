@@ -20,6 +20,7 @@ import com.springboot.cli.service.ExerciseService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -136,16 +137,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public List<ExerciseDO> getRecList(String studentId, Integer questionNum) {
-        String url = PYTHON_SERVICE + "/get_recommend_list";
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("userId", studentId);
-        requestBody.put("questionNum", questionNum);
-        HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestBody, requestHeaders);
+        String url = PYTHON_SERVICE + "/get_recommend_list?userId={studentId}&questionNum={questionNum}";
         String result = null;
         try{
-            result = restTemplate.postForObject(url, httpEntity, String.class);
+            result = restTemplate.getForEntity(url, String.class, studentId, questionNum).getBody();
         } catch (Exception e) {
             throw new OpException(OpExceptionEnum.REC_ERROR);
         }
