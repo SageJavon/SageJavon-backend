@@ -27,7 +27,9 @@ public enum OpExceptionEnum {
 
     LLM_ERROR("LLM_ERROR", "大模型错误", CONTACT_RD),
 
-    JWT_ERROR("JWT_ERROR", "JWT解析错误", CONTACT_RD);
+    JWT_ERROR("JWT_ERROR", "JWT解析错误", CONTACT_RD),
+
+    REC_ERROR("REC_ERROR", "推荐系统错误", CONTACT_RD);
 
     final String code;
     final String message;

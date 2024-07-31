@@ -15,7 +15,7 @@ public interface ExerciseService {
 
     Integer getExerciseLNumber(int type);
 
-    List<ExerciseDO> getRecList(Integer questionNum);
+    List<ExerciseDO> getRecList(String studentId, Integer questionNum);
 
     ExercisePage page(Integer type, Integer pageNum, Integer pageSize, Integer difficulty, List<Long> knowledgeId, Integer difficultyOrder);
 }

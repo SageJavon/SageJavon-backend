@@ -35,7 +35,7 @@ public class ExerciseController {
     public BaseResponse<List<ExerciseVO>> getRecList(Integer questionNum, Integer difficultyOrder) {
         if(questionNum == null || difficultyOrder == null) return BaseResponse.buildBizEx(OpExceptionEnum.ILLEGAL_ARGUMENT);
         try {
-            List<ExerciseDO> exerciseList = exerciseService.getRecList(questionNum);
+            List<ExerciseDO> exerciseList = exerciseService.getRecList(AuthStorage.getUser().getUserId(), questionNum);
             if(exerciseList == null || exerciseList.isEmpty())
                 return BaseResponse.buildSuccess(null);
             List<ExerciseVO> resultList = new ArrayList<>();
