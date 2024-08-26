@@ -7,6 +7,7 @@ import com.springboot.cli.model.VO.MessageVO;
 import com.springboot.cli.model.VO.SMessageVO;
 import com.springboot.cli.service.ChatService;
 import com.springboot.cli.service.HistoryService;
+import com.springboot.cli.service.TutorHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,14 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/chat")
 public class ChatController {
-
     @Resource
     ChatService chatService;
 
     @Resource
     HistoryService historyService;
+
+    @Resource
+    TutorHistoryService tutorHistoryService;
 
     @PostMapping
     public BaseResponse<Long> createChat() {
@@ -72,6 +75,17 @@ public class ChatController {
     public BaseResponse<List<MessageVO>> getHistory(Long chatId) {
         try {
             return BaseResponse.buildSuccess(historyService.getHistory(chatId));
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        } catch (Exception e) {
+            return BaseResponse.buildSysEx(e);
+        }
+    }
+
+    @PostMapping("/tutor")
+    public BaseResponse<Void> buildTutorMessage(@RequestBody List<SMessageVO> sMessageList) {
+        try {
+            return BaseResponse.buildSuccess(tutorHistoryService.buildMessage(sMessageList));
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);
         } catch (Exception e) {

@@ -21,10 +21,6 @@ public enum OpExceptionEnum {
 
     USER_ID_EMPTY("USER_ID_EMPTY", "用户ID为空", CHECK_ARGUMENT),
 
-    CHAT_ID_EMPTY("CHAT_ID_EMPTY", "ChatID为空", CHECK_ARGUMENT),
-
-    CHAT_NOT_EXIST("CHAT_NOT_EXIST", "Chat不存在", CHECK_ARGUMENT),
-
     LLM_ERROR("LLM_ERROR", "大模型错误", CONTACT_RD),
 
     JWT_ERROR("JWT_ERROR", "JWT解析错误", CONTACT_RD),

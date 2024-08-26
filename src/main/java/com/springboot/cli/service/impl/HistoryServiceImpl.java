@@ -12,7 +12,6 @@ import com.springboot.cli.repository.impl.HistoryRepository;
 import com.springboot.cli.service.HistoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -21,10 +20,6 @@ import java.util.List;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
-
-    @Resource
-    private RestTemplate restTemplate;
-
     @Resource
     private ChatRepository chatRepository;
 
@@ -34,9 +29,9 @@ public class HistoryServiceImpl implements HistoryService {
     @Override
     @Transactional
     public List<MessageVO> buildMessage(Long chatId, List<SMessageVO> sMessageList) {
-        if (chatId == null) throw new OpException(OpExceptionEnum.CHAT_ID_EMPTY);
+        if (chatId == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
         ChatDO chat = chatRepository.getById(chatId);
-        if(chat == null) throw new OpException(OpExceptionEnum.CHAT_NOT_EXIST);
+        if(chat == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
         int sort = chat.getSort();
         List<HistoryDO> batchList = new ArrayList<>();
         for(SMessageVO sMessage : sMessageList) {
@@ -47,6 +42,7 @@ public class HistoryServiceImpl implements HistoryService {
                     .content(sMessage.getContent())
                     .timeStamp(LocalDateTime.now())
                     .sort(sort)
+                    .deletedFlag(0)
                     .build();
             batchList.add(history);
         }
@@ -60,13 +56,14 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<MessageVO> getHistory(Long chatId) {
-        if (chatId == null) throw new OpException(OpExceptionEnum.CHAT_ID_EMPTY);
+        if (chatId == null) throw new OpException(OpExceptionEnum.ILLEGAL_ARGUMENT);
         return getMessageVOList(chatId);
     }
 
     private List<MessageVO> getMessageVOList(Long chatId) {
         LambdaQueryWrapper<HistoryDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(HistoryDO::getChatId, chatId);
+        queryWrapper.eq(HistoryDO::getDeletedFlag, 0);
         queryWrapper.orderByAsc(HistoryDO::getSort);
         List<HistoryDO> historyList = historyRepository.list(queryWrapper);
         List<MessageVO> messageList = new ArrayList<>();

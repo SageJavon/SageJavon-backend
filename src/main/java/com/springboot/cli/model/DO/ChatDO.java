@@ -25,4 +25,6 @@ public class ChatDO {
     //是否长期保存
     private Integer longTerm;
     private LocalDateTime updateTime;
+    //逻辑删除标识
+    private Integer deletedFlag;
 }

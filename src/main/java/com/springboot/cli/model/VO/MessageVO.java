@@ -16,10 +16,12 @@ public class MessageVO {
     private String content;
     private Integer role;
     private LocalDateTime timeStamp;
+    private Integer sort;
 
     public MessageVO(HistoryDO history) {
         this.content = history.getContent();
         this.role = history.getRole();
         this.timeStamp = history.getTimeStamp();
+        this.sort = history.getSort();
     }
 }
