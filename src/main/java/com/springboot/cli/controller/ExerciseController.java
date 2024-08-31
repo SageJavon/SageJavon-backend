@@ -11,6 +11,7 @@ import com.springboot.cli.model.VO.exercise.*;
 import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
 import com.springboot.cli.service.KnowledgeService;
+import com.springboot.cli.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,9 @@ public class ExerciseController {
 
     @Resource
     private ExerciseRecordService exerciseRecordService;
+
+    @Resource
+    private ReviewService reviewService;
 
     @GetMapping("/recommend")
     public BaseResponse<List<ExerciseVO>> getRecList(Integer questionNum, Integer difficultyOrder) {
@@ -108,6 +112,15 @@ public class ExerciseController {
             List<KnowledgeVO> resultList = new ArrayList<>();
             knowledgeList.forEach(knowledge -> resultList.add(new KnowledgeVO(knowledge)));
             return BaseResponse.buildSuccess(resultList);
+        } catch (OpException e) {
+            return BaseResponse.buildBizEx(e);
+        }
+    }
+
+    @PostMapping("/review")
+    public BaseResponse<Integer> review(Long exerciseId, Integer review) {
+        try {
+            return BaseResponse.buildSuccess(reviewService.review(exerciseId, review));
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);
         }

@@ -2,12 +2,14 @@ package com.springboot.cli.controller;
 
 import com.springboot.cli.common.base.BaseResponse;
 import com.springboot.cli.common.exception.OpException;
+import com.springboot.cli.common.jwt.AuthStorage;
 import com.springboot.cli.model.DO.ExerciseDO;
 import com.springboot.cli.model.DO.ExerciseRecordDO;
 import com.springboot.cli.model.VO.exercise.*;
 import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
 import com.springboot.cli.service.KnowledgeService;
+import com.springboot.cli.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,9 @@ public class SelectExerciseController {
     @Resource
     private ExerciseRecordService exerciseRecordService;
 
+    @Resource
+    private ReviewService reviewService;
+
     @GetMapping("/detail")
     public BaseResponse<SelectExerciseVO> getExerciseDetail(Long id) {
         if(id == null) return BaseResponse.buildBizEx(ILLEGAL_ARGUMENT);
@@ -40,7 +45,8 @@ public class SelectExerciseController {
             if(exercise == null)
                 return BaseResponse.buildSuccess(null);
             List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
-            SelectExerciseVO selectExercise = new SelectExerciseVO(exercise, knowledgeList);
+            Integer review = reviewService.getReview(AuthStorage.getUser().getUserId(), id);
+            SelectExerciseVO selectExercise = new SelectExerciseVO(exercise, knowledgeList, review);
             return BaseResponse.buildSuccess(selectExercise);
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);

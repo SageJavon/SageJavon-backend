@@ -9,6 +9,7 @@ import com.springboot.cli.model.VO.exercise.*;
 import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
 import com.springboot.cli.service.KnowledgeService;
+import com.springboot.cli.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,9 @@ public class CodeExerciseController {
     @Resource
     private ExerciseRecordService exerciseRecordService;
 
+    @Resource
+    private ReviewService reviewService;
+
     @GetMapping("/detail")
     public BaseResponse<CodeExerciseVO> getExerciseDetail(Long id) {
         try {
@@ -39,7 +43,8 @@ public class CodeExerciseController {
                 return BaseResponse.buildSuccess(null);
             List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
             Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
-            CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
+            Integer review = reviewService.getReview(AuthStorage.getUser().getUserId(), id);
+            CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done, review);
             return BaseResponse.buildSuccess(codeExercise);
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);
