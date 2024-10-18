@@ -23,6 +23,7 @@ public class ExerciseRecordVO {
     private LocalDateTime submitTime;
     private Integer difficulty;
     private Integer type;
+    private String chapter;
 
     public ExerciseRecordVO(ExerciseDO exercise, List<KnowledgeVO> knowledgeConcept, ExerciseRecordDO exerciseRecord) {
         this.recordId = exerciseRecord.getId();
@@ -33,5 +34,6 @@ public class ExerciseRecordVO {
         this.submitTime = exerciseRecord.getSubmitTime();
         this.difficulty = exercise.getDifficulty();
         this.type = exercise.getType();
+        this.chapter = exercise.getChapter();
     }
 }

@@ -24,4 +24,5 @@ public class ExerciseDO {
     private String choiceC;
     private String choiceD;
     private Integer type;
+    private String chapter;
 }

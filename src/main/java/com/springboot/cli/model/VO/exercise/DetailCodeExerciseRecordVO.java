@@ -22,6 +22,7 @@ public class DetailCodeExerciseRecordVO {
     private String correctAnswer;
     private String suggestion;
     private Integer difficulty;
+    private String chapter;
 
     public DetailCodeExerciseRecordVO(ExerciseDO exercise, List<KnowledgeVO> knowledgeConcept, ExerciseRecordDO exerciseRecord) {
         this.questionId = exercise.getId();
@@ -32,5 +33,6 @@ public class DetailCodeExerciseRecordVO {
         this.correctAnswer = exercise.getCorrectAnswer();
         this.suggestion = exerciseRecord.getSuggestion();
         this.difficulty = exercise.getDifficulty();
+        this.chapter = exercise.getChapter();
     }
 }

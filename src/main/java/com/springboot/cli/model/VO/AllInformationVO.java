@@ -1,6 +1,6 @@
 package com.springboot.cli.model.VO;
 
-import com.springboot.cli.model.VO.exercise.CodeExerciseVO;
+import com.springboot.cli.model.VO.exercise.ExerciseVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class AllInformationVO {
     private Integer selectNumber;
     private Integer codeNumber;
     private LocalDateTime latestTime;
-    private List<CodeExerciseVO> popularQuestion;
+    private List<ExerciseVO> popularQuestion;
     private Integer solveDays;
     private Integer solveQuestions;
     private Map<LocalDate, Integer> solveNumbersPerDay;

@@ -6,7 +6,7 @@ import com.springboot.cli.common.jwt.AuthStorage;
 import com.springboot.cli.model.DO.ExerciseDO;
 import com.springboot.cli.model.DO.ExerciseRecordDO;
 import com.springboot.cli.model.VO.AllInformationVO;
-import com.springboot.cli.model.VO.exercise.CodeExerciseVO;
+import com.springboot.cli.model.VO.exercise.ExerciseVO;
 import com.springboot.cli.model.VO.exercise.KnowledgeVO;
 import com.springboot.cli.service.ExerciseRecordService;
 import com.springboot.cli.service.ExerciseService;
@@ -45,20 +45,20 @@ public class HomePageController {
             LocalDateTime maxSubmitTime = getMaxSubmitTime(allExerciseRecord);
 
             List<Long> top10ExerciseIds = getTop10PopularExerciseIds(allExerciseRecord);
-            List<CodeExerciseVO> codeExerciseVOList = new ArrayList<>();
+            List<ExerciseVO> exerciseVOList = new ArrayList<>();
             for (Long id : top10ExerciseIds) {
                 ExerciseDO exercise = exerciseService.getExerciseById(id);
                 List<KnowledgeVO> knowledgeList = knowledgeService.getKnowledgeList(id);
                 Integer done = exerciseRecordService.hasDoneExercise(AuthStorage.getUser().getUserId(), id);
-                CodeExerciseVO codeExercise = new CodeExerciseVO(exercise, knowledgeList, done);
-                codeExerciseVOList.add(codeExercise);
+                ExerciseVO exerciseVO = new ExerciseVO(exercise, knowledgeList, done);
+                exerciseVOList.add(exerciseVO);
             }
 
             Integer continuousSolveDays = getContinuousSolveDays(allExerciseRecord);
             Integer solveCount = getSolveCount(allExerciseRecord);
             Map<LocalDate, Integer> solvePerDay = getSolvePerDay(allExerciseRecord);
 
-            return BaseResponse.buildSuccess(new AllInformationVO(codeNumber,selectNumber,maxSubmitTime,codeExerciseVOList,continuousSolveDays,solveCount,solvePerDay));
+            return BaseResponse.buildSuccess(new AllInformationVO(codeNumber,selectNumber,maxSubmitTime,exerciseVOList,continuousSolveDays,solveCount,solvePerDay));
         } catch (OpException e) {
             return BaseResponse.buildBizEx(e);
         }
@@ -91,7 +91,7 @@ public class HomePageController {
         Map<LocalDate, Integer> solvePerDay = new HashMap<>();
         for (Map.Entry<LocalDate, List<Long>> entry : exerciseCountPerDay.entrySet()) {
             List<Long> exerciseIds = entry.getValue();
-            int distinctExerciseCount = exerciseIds.stream().distinct().collect(Collectors.toList()).size();
+            int distinctExerciseCount = (int) exerciseIds.stream().distinct().count();
             solvePerDay.put(entry.getKey(), distinctExerciseCount);
         }
         return solvePerDay;

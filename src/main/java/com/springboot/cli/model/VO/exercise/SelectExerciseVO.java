@@ -22,6 +22,7 @@ public class SelectExerciseVO {
     private String choiceD;
     private Integer difficulty;
     private Integer review;
+    private String chapter;
 
     public SelectExerciseVO(ExerciseDO selectExercise, List<KnowledgeVO> knowledgeList, Integer review) {
         this.id = selectExercise.getId();
@@ -33,5 +34,6 @@ public class SelectExerciseVO {
         this.choiceD = selectExercise.getChoiceD();
         this.difficulty = selectExercise.getDifficulty();
         this.review = review;
+        this.chapter = selectExercise.getChapter();
     }
 }

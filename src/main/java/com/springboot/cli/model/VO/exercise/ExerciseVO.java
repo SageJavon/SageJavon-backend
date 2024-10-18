@@ -19,6 +19,7 @@ public class ExerciseVO {
     private Integer difficulty;
     private Integer done;
     private Integer type;
+    private String chapter;
 
     public ExerciseVO(ExerciseDO exercise, List<KnowledgeVO> knowledgeList, Integer done) {
         this.id = exercise.getId();
@@ -27,5 +28,6 @@ public class ExerciseVO {
         this.difficulty = exercise.getDifficulty();
         this.done = done;
         this.type = exercise.getType();
+        this.chapter = exercise.getChapter();
     }
 }

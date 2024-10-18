@@ -27,6 +27,7 @@ public class DetailSelectExerciseRecordVO {
     private Integer score;
     private LocalDateTime submitTime;
     private Integer difficulty;
+    private String chapter;
 
     public DetailSelectExerciseRecordVO(ExerciseDO exercise, List<KnowledgeVO> knowledgeConcept, ExerciseRecordDO exerciseRecord) {
         this.questionId = exercise.getId();
@@ -41,5 +42,6 @@ public class DetailSelectExerciseRecordVO {
         this.answer = exerciseRecord.getAnswer();
         this.submitTime = exerciseRecord.getSubmitTime();
         this.difficulty = exercise.getDifficulty();
+        this.chapter = exercise.getChapter();
     }
 }
