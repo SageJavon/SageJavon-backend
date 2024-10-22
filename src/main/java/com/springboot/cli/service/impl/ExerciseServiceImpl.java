@@ -20,7 +20,6 @@ import com.springboot.cli.service.ExerciseService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,7 +60,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestBody, requestHeaders);
-        String result = null;
+        String result;
         try{
             result = restTemplate.postForObject(url, httpEntity, String.class);
         } catch (Exception e) {
@@ -75,7 +74,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         Integer codingStyle = dataJson.getInteger("codingStyle");
         Integer functionalCorrectness = dataJson.getInteger("functionalCorrectness");
         Integer usefulness = dataJson.getInteger("usefulness");
-        Double score = Math.round((codingStyle + functionalCorrectness + usefulness) / 12.0 * 100.0) / 100.0;
+        double score = Math.round((codingStyle + functionalCorrectness + usefulness) / 12.0 * 100.0) / 100.0;
         ExerciseRecordDO exerciseRecord = ExerciseRecordDO.builder()
                 .exerciseId(id)
                 .studentId(AuthStorage.getUser().getUserId())
@@ -138,7 +137,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public List<ExerciseDO> getRecList(String studentId, Integer questionNum) {
         String url = PYTHON_SERVICE + "/get_recommend_list?userId={studentId}&questionNum={questionNum}";
-        String result = null;
+        String result;
         try{
             result = restTemplate.getForEntity(url, String.class, studentId, questionNum).getBody();
         } catch (Exception e) {
@@ -159,7 +158,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public ExercisePage page(Integer type, Integer pageNum, Integer pageSize, Integer difficulty, List<Long> knowledgeId, Integer difficultyOrder) {
+    public ExercisePage page(Integer type, Integer pageNum, Integer pageSize, Integer difficulty, List<Long> knowledgeId, Integer difficultyOrder, String chapter) {
         Page<ExerciseDO> page = new Page<>(pageNum, pageSize);
         page.addOrder(new OrderItem("id", true));
         LambdaQueryWrapper<ExerciseDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -176,6 +175,9 @@ public class ExerciseServiceImpl implements ExerciseService {
             List<Long> exerciseId = new ArrayList<>();
             exerciseKnowledgeList.forEach(exerciseKnowledge -> exerciseId.add(exerciseKnowledge.getExerciseId()));
             queryWrapper.in(ExerciseDO::getId, exerciseId);
+        }
+        if (chapter != null) {
+            queryWrapper.eq(ExerciseDO::getChapter, chapter);
         }
         if (difficultyOrder != 0)
             queryWrapper.orderBy(true, difficultyOrder == 1, ExerciseDO::getDifficulty);
